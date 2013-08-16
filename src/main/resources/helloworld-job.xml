@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/batch 
+	http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+
+	<import resource="launch-context.xml" />
+	<job id="helloworld-job" restartable="true" incrementer="idIncrementer" xmlns="http://www.springframework.org/schema/batch">
+		<step id="step1">
+			<tasklet ref="helloworld" />
+		</step>
+	</job>
+	<bean id="helloworld" class="com.swapnonil.springexp.HelloWorldTasklet" />
+
+	<bean id="idIncrementer" class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
+
+</beans>

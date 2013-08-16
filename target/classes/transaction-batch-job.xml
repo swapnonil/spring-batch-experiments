@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/batch 
+	http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+
+	<import resource="launch-context.xml" />
+	<job id="transaction-batch-job" restartable="true" xmlns="http://www.springframework.org/schema/batch">
+		<step id="step1">
+			<tasklet>
+				<chunk reader="recordReader" writer="recordWriter" commit-interval="50" />
+			</tasklet>
+		</step>
+	</job>
+
+	<!-- Reader Configuration For Fixed Length Job -->
+	<bean id="recordReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="lineMapper" ref="lineMapper" />
+
+		<property name="resource" value="classpath:25000S0100710FN.txt" />
+	</bean>
+	<bean id="lineMapper" class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+		<property name="lineTokenizer" ref="lineTokenizer" />
+		<property name="fieldSetMapper" ref="fieldSetMapper" />
+	</bean>
+	<bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+		<property name="columns" value="1-10,11-16,17-18,19-32,33-33,34-34,35-42,43-50,51-52,53-60,61-62,63-70,71-72,73-75,76-91,92-109,110-110,111-111,112-112,113-115,116-123,124-125" />
+		<property name="names"
+			value="manufacturingNumber,cardTransactionNumber,transactionType,transactionDateTime,drcrFlag,purseFlag,transactionAmount,afterCardBalance,cardIssuer,obuNumber,entrySPID,signatureVersionNumber,signature,cardNumber,corporateFlag,userCategory,cscCardType,entryLocation,lastRefillMachineCode,applicationSector" />
+	</bean>
+	<bean id="fieldSetMapper" class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+		<property name="prototypeBeanName" value="record" />
+	</bean>
+	<bean name="record" class="com.swapnonil.springexp.Record" scope="prototype" />
+	<bean name="simpleRecordSeparatorPolicy" class="org.springframework.batch.item.file.separator.SimpleRecordSeparatorPolicy" />
+
+	<!-- Writer Configuration for Fixed Length Job -->
+	<bean id="recordWriter" class="com.swapnonil.springexp.RecordWriter" />
+
+
+</beans>	
