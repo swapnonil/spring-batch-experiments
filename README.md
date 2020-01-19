@@ -1,4 +1,4 @@
 spring-batch-experiments
 ========================
 
-Contains Experiments with Spring Batch
+Contains patterns of parallel processing with Spring Batch
